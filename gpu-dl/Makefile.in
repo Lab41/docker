@@ -1,19 +1,28 @@
-build: depends
-	docker build -t lab41/nvidia-base -f Dockerfile.nvidia .
-	docker build -t lab41/theano -f Dockerfile.theano .
-	docker build -t lab41/keras -f Dockerfile.keras .
-	docker build -t lab41/tensorflow -f Dockerfile.tf .
-	docker build -t lab41/caffe -f Dockerfile.caffe .
-	docker build -t lab41/domino-tensorflow -f Dockerfile.domino .
+build: depends theano keras tensorflow caffe domino
+	@echo "Built all."
 
-attalos-bash: depends
+
+nvidia: depends
+	docker build -t lab41/nvidia-base -f Dockerfile.nvidia .
+theano: nvidia
+	docker build -t lab41/theano -f Dockerfile.theano .
+keras: theano
+	docker build -t lab41/keras -f Dockerfile.keras .
+tensorflow: nvidia
+	docker build -t lab41/tensorflow -f Dockerfile.tf .
+domino: tensorflow
+	docker build -t lab41/domino-tensorflow -f Dockerfile.domino .
+caffe: nvidia
+	docker build -t lab41/caffe -f Dockerfile.caffe .
+
+tf-bash: depends
 	docker run --device /dev/nvidiactl:/dev/nvidiactl --device /dev/nvidia-uvm:/dev/nvidia-uvm \
         	   --device /dev/nvidia${_L41_GPU_NUMBER}:/dev/nvidia0 -it lab41/tensorflow /bin/bash
 
-tf-notebook: depends
-	docker build -t lab41/tf-notebook -f Dockerfile.notebook .
+theano-notebook: theano
+	docker build -t lab41/notebook -f Dockerfile.notebook .
 	docker run -d -p ${_L41_NOTEBOOK_PORT}:8888 -v /data:/data -v ~/:/work --device /dev/nvidiactl:/dev/nvidiactl --device /dev/nvidia-uvm:/dev/nvidia-uvm \
-        	   --device /dev/nvidia${_L41_GPU_NUMBER}:/dev/nvidia0 -it lab41/tf-notebook
+        	   --device /dev/nvidia${_L41_GPU_NUMBER}:/dev/nvidia0 -it lab41/notebook
 
 depends:
 	@echo
