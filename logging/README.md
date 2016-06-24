@@ -9,7 +9,7 @@ Compile and run a basic image with python 2.7 and logging:
 
 ```sh
 _NOPL_BASE_IMAGE="python:2" make
-./go.python-2
+docker run -it --env-file=env.list -v /var/run/docker.sock:/var/run/docker.sock tmpimage
 ```
 
 Compile and run a Jupyter notebook server with logging:
