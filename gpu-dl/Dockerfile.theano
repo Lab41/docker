@@ -1,4 +1,4 @@
-FROM l41-nvidia-base
+FROM lab41/nvidia-base
 MAINTAINER Karl Ni
 
 # Install Theano

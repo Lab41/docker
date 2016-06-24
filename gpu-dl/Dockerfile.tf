@@ -1,4 +1,4 @@
-FROM l41-nvidia-base
+FROM lab41/nvidia-base
 
 # Install git, bc and dependencies
 RUN apt-get update && apt-get install -y \

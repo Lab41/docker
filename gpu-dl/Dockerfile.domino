@@ -1,4 +1,4 @@
-FROM l41-tensorflow
+FROM lab41/tensorflow
 MAINTAINER Alex Gude <agude@iqt.org>
 
 # Set up the Ubuntu User that Domino Expects
