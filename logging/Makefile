@@ -1,9 +1,11 @@
-	NEW_TAG = tmp
+NEW_TAG := tmp
+TMP_IMAGE_NAME := tmpimage
 all:
 	mo/mo Dockerfile.mo.logging > Dockerfile.$(NEW_TAG)
-	IMAGE_HASH=$(docker build -t $(NEW_TAG):logging -f Dockerfile.$(NEW_TAG) .)  \
-	echo "docker run -it -v /var/run/docker.sock:/var/run/docker.sock --env-file=env.list $(IMAGE_HASH)" | tee go.$(IMAGE_HASH)
-	chmod +x go.$(IMAGE_HASH)
+	docker build -t $(TMP_IMAGE_NAME) -f Dockerfile.${NEW_TAG} .
+	@echo
+	@echo "New image built and tagged $(TMP_IMAGE_NAME)"
+	@printf "Invoke with\n\tdocker run -it -v /var/run/docker.sock:/var/run/docker.sock --env-file=[PATH TO env.list] $(TMP_IMAGE_NAME)\n"
 
 jupyter:
 	_NOPL_BASE_IMAGE="python:2" \
