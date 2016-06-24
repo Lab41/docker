@@ -19,10 +19,14 @@ tf-bash: depends
 	docker run --device /dev/nvidiactl:/dev/nvidiactl --device /dev/nvidia-uvm:/dev/nvidia-uvm \
         	   --device /dev/nvidia${_L41_GPU_NUMBER}:/dev/nvidia0 -it lab41/tensorflow /bin/bash
 
-theano-notebook: theano
-	docker build -t lab41/notebook -f Dockerfile.notebook .
+tf-notebook: theano
+	docker build -t lab41/tf-notebook -f Dockerfile.tf-notebook .
 	docker run -d -p ${_L41_NOTEBOOK_PORT}:8888 -v /data:/data -v ~/:/work --device /dev/nvidiactl:/dev/nvidiactl --device /dev/nvidia-uvm:/dev/nvidia-uvm \
-        	   --device /dev/nvidia${_L41_GPU_NUMBER}:/dev/nvidia0 -it lab41/notebook
+        	   --device /dev/nvidia${_L41_GPU_NUMBER}:/dev/nvidia0 -it lab41/tf-notebook
+theano-notebook: theano
+	docker build -t lab41/theano-notebook -f Dockerfile.theano-notebook .
+	docker run -d -p ${_L41_NOTEBOOK_PORT}:8888 -v /data:/data -v ~/:/work --device /dev/nvidiactl:/dev/nvidiactl --device /dev/nvidia-uvm:/dev/nvidia-uvm \
+        	   --device /dev/nvidia${_L41_GPU_NUMBER}:/dev/nvidia0 -it lab41/theano-notebook
 
 depends:
 	@echo
