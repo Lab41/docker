@@ -1,4 +1,4 @@
-HOSTNAME := $(shell hostname)
+HOSTNAME := $(shell hostname --fqdn)
 
 build: depends theano keras tensorflow caffe domino
 	@echo "Built all."
@@ -25,11 +25,13 @@ tf-notebook: theano
 	docker build -t lab41/tf-notebook -f Dockerfile.tf-notebook .
 	docker run -d -p ${_L41_NOTEBOOK_PORT}:8888 -v /data/fs4:/data/fs4 -v ~/:/work --device /dev/nvidiactl:/dev/nvidiactl --device /dev/nvidia-uvm:/dev/nvidia-uvm \
         	   --device /dev/nvidia${_L41_GPU_NUMBER}:/dev/nvidia0 -it lab41/tf-notebook
+	@echo "Notebook serving at http://$(HOSTNAME):$(_L41_NOTEBOOK_PORT)"
+
 theano-notebook: theano
 	docker build -t lab41/theano-notebook -f Dockerfile.theano-notebook .
 	docker run -d -p ${_L41_NOTEBOOK_PORT}:8888 -v /data/fs4:/data/fs4 -v ~/:/work --device /dev/nvidiactl:/dev/nvidiactl --device /dev/nvidia-uvm:/dev/nvidia-uvm \
         	   --device /dev/nvidia${_L41_GPU_NUMBER}:/dev/nvidia0 -it lab41/theano-notebook
-	@echo "Notebook serving at $(HOSTNAME):$(_L41_NOTEBOOK_PORT)"
+	@echo "Notebook serving at http://$(HOSTNAME):$(_L41_NOTEBOOK_PORT)"
 
 depends:
 	@echo
