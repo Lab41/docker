@@ -1,3 +1,3 @@
 _L41_GPU_NUMBER=0
 _L41_NOTEBOOK_PORT=7000
-_L41_MOUNTS=-v /data/fs4:/data/fs4 -v ~/:/work
+_L41_MOUNTS=-v ~/:/work
