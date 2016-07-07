@@ -1,0 +1,40 @@
+HOSTNAME := $(shell hostname --fqdn)
+
+build: depends theano keras tensorflow caffe domino
+	@echo "Built all."
+
+nvidia: depends
+	docker build -t lab41/nvidia-base -f Dockerfile.nvidia .
+theano: nvidia
+	docker build -t lab41/theano -f Dockerfile.theano .
+keras: theano
+	docker build -t lab41/keras -f Dockerfile.keras .
+tensorflow: nvidia
+	docker build -t lab41/tensorflow -f Dockerfile.tf .
+domino: tensorflow
+	docker build -t lab41/domino-tensorflow -f Dockerfile.domino .
+caffe: nvidia
+	docker build -t lab41/caffe -f Dockerfile.caffe .
+
+tf-bash: depends
+	docker run --device /dev/nvidiactl:/dev/nvidiactl --device /dev/nvidia-uvm:/dev/nvidia-uvm \
+        	   --device /dev/nvidia${_L41_GPU_NUMBER}:/dev/nvidia0 -it lab41/tensorflow /bin/bash
+
+tf-notebook: theano
+	docker build -t lab41/tf-notebook -f Dockerfile.tf-notebook .
+	docker run -d -p ${_L41_NOTEBOOK_PORT}:8888 $(_L41_MOUNTS) --device /dev/nvidiactl:/dev/nvidiactl --device /dev/nvidia-uvm:/dev/nvidia-uvm \
+        	   --device /dev/nvidia${_L41_GPU_NUMBER}:/dev/nvidia0 -it lab41/tf-notebook
+	@echo "Notebook serving at http://$(HOSTNAME):$(_L41_NOTEBOOK_PORT)"
+
+theano-notebook: theano
+	docker build -t lab41/theano-notebook -f Dockerfile.theano-notebook .
+	docker run -d -p ${_L41_NOTEBOOK_PORT}:8888 $(_L41_MOUNTS) --device /dev/nvidiactl:/dev/nvidiactl --device /dev/nvidia-uvm:/dev/nvidia-uvm \
+        	   --device /dev/nvidia${_L41_GPU_NUMBER}:/dev/nvidia0 -it lab41/theano-notebook
+	@echo "Notebook serving at http://$(HOSTNAME):$(_L41_NOTEBOOK_PORT)"
+
+depends:
+	@echo
+	@echo "checking dependencies"
+	@echo
+	docker -v
+

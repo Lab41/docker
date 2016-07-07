@@ -1,0 +1,22 @@
+filebeat:
+ prospectors:
+  -
+   paths:
+    - /var/log/syslog
+    - /var/log/self/*
+    {{#_l41_application_dirspec}}
+    - {{_l41_application_dirspec}}
+    {{/_l41_application_dirspec}}
+   fields:
+      {{#_l41_logging_tag}}
+       prefix: {{_l41_logging_tag}}
+      {{/_l41_logging_tag}}
+      {{#_docker_image}}
+       image: {{_docker_image}}
+      {{/_docker_image}}
+
+output:
+ logstash:
+  hosts: ["{{_l41_logstash_host}}:{{_l41_logstash_port}}"]
+#use next line when sending to syslog server..
+#compression_level: 0

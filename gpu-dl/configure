@@ -1,0 +1,5 @@
+#!/bin/bash
+
+printf "Using configuration:\n$(cat config.list)\n" && sleep 2
+cat config.list <(printf "\n")  Makefile.in > ~Makefile.tmp
+mv ~Makefile.tmp Makefile

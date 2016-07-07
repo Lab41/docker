@@ -1,0 +1,8 @@
+FROM {{_SACRED_BASE_IMAGE}}
+MAINTAINER Patrick Callier <pcallier@iqt.org>
+
+USER root
+RUN apt-get update && apt-get install -yq mongodb-clients && \
+    pip install pymongo && \
+    pip install sacred
+

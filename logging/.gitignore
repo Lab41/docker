@@ -1,0 +1,14 @@
+.DS_Store
+*.pyc
+*.swp
+**/.ropeproject
+**/.ipynb_checkpoints
+*.pickle
+
+# user-specific config
+env.list
+# built Dockerfiles
+Dockerfile.*
+!Dockerfile.template
+!Dockerfile.mo.logging
+go*
